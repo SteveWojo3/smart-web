@@ -1,0 +1,587 @@
+﻿<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SmartArcade & Rent Manager</title>
+    <meta
+      name="description"
+      content="Tenants can browse and apply for mall space. Landlords can review applications and track rent and utility charges."
+    />
+    <meta property="og:title" content="SmartArcade & Rent Manager" />
+    <meta
+      property="og:description"
+      content="Tenants can browse and apply for mall space. Landlords can review applications and track rent and utility charges."
+    />
+    <meta name="theme-color" content="#102A43" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand-wrap">
+          <img
+            class="brand-logo"
+            src="images/logow.png"
+            alt="SmartArcade Rent Manager"
+          />
+        </div>
+
+        <div class="header-actions">
+          <div class="support-stack">
+            <button
+              id="supportToggle"
+              class="icon-button"
+              aria-label="Support options"
+            >
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 24 24"
+                width="20"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.8"
+                stroke-linecap="round"
+              >
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+            <div
+              id="supportMenu"
+              class="support-menu hidden"
+              aria-live="polite"
+            >
+              <a
+                href="https://wa.me/256700000001"
+                target="_blank"
+                rel="noopener noreferrer"
+                >WhatsApp</a
+              >
+              <a href="tel:+256700000001">Call</a>
+            </div>
+          </div>
+
+          <button
+            id="notificationButton"
+            class="icon-button has-badge"
+            aria-label="Notifications"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9" />
+              <path d="M10 21h4" />
+            </svg>
+            <span id="notificationBadge" class="badge">0</span>
+          </button>
+        </div>
+      </header>
+
+      <!--Dashboard-->
+      <main class="dashboard">
+        <aside class="sidebar">
+          <div class="app-hero">
+            <img
+              id="mallLogo"
+              src="images/logow.png"
+              alt="SmartArcade Rent Manager logo"
+            />
+            <h1>Mall space for tenants. Rental management for landlords.</h1>
+            <p id="mallLabel">Akamwesi Mall</p>
+          </div>
+
+          <div class="tab-switch" role="tablist" aria-label="User type">
+            <button
+              class="tab-btn active"
+              data-tab="tenant"
+              role="tab"
+              aria-selected="true"
+            >
+              Tenant
+            </button>
+            <button
+              class="tab-btn"
+              data-tab="landlord"
+              role="tab"
+              aria-selected="false"
+            >
+              Landlord
+            </button>
+          </div>
+
+          <!--Mall selection-->
+          <section id="tenantPanel" class="tab-panel active">
+            <div class="panel-header">
+              <h2>Choose a Mall</h2>
+            </div>
+            <div id="mallCards" class="mall-cards" aria-live="polite"></div>
+          </section>
+
+          <section id="landlordPanel" class="tab-panel">
+            <div class="panel-header">
+              <h2>Landlord access</h2>
+            </div>
+            <div class="admin-card">
+              <p>Select your mall to open its property management dashboard.</p>
+            </div>
+          </section>
+        </aside>
+
+        <!-- The individual mall -->
+        <section class="content-panel">
+          <div id="tenantView" class="screen active">
+            <div class="hero-card">
+              <div class="hero-image-wrap">
+                <img id="selectedMallImage" src="" alt="Selected mall" />
+              </div>
+              <div class="hero-info">
+                <div class="mini-label">Check Availability</div>
+                <h2 id="roomHeading">Akamwesi Mall</h2>
+                <div class="inline-field">
+                  <label for="floorSelect">Floor</label>
+                  <select id="floorSelect"></select>
+                </div>
+                <div class="inline-field">
+                  <label for="roomSelect">Room</label>
+                  <select id="roomSelect"></select>
+                </div>
+              </div>
+            </div>
+
+            <section
+              class="availability-panel"
+              aria-labelledby="tenantAvailabilityTitle"
+            >
+              <div class="availability-heading">
+                <div>
+                  <div class="mini-label">Room availability</div>
+                  <h3 id="tenantAvailabilityTitle">Room availability</h3>
+                </div>
+              </div>
+              <div id="tenantMallAvailability" class="availability-grid"></div>
+            </section>
+
+            <div class="room-summary">
+              <div>
+                <span class="summary-label">Room</span>
+                <strong id="roomNumberReadout">Room G1</strong>
+              </div>
+              <div>
+                <span class="summary-label">Status</span>
+                <strong id="roomStatusReadout" class="status-badge vacant"
+                  >VACANT</strong
+                >
+              </div>
+              <div>
+                <span class="summary-label">Base Rent</span>
+                <strong id="roomRentReadout">UGX 500,000</strong>
+              </div>
+            </div>
+
+            <div class="apply-section">
+              <h3>Apply for this room</h3>
+              <form id="applicationForm">
+                <p class="application-mall">
+                  Applying at
+                  <strong id="applicationMallName">Akamwesi Mall</strong>
+                </p>
+                <div class="form-grid">
+                  <label>
+                    <span>Full Name</span>
+                    <input
+                      id="applicantName"
+                      type="text"
+                      placeholder="Full Name"
+                      required
+                    />
+                  </label>
+                  <label>
+                    <span>Phone Number</span>
+                    <input
+                      id="applicantPhone"
+                      type="tel"
+                      placeholder="+2567XXXXXXXX"
+                      required
+                    />
+                  </label>
+                  <label class="form-grid-wide">
+                    <span>Business Name</span>
+                    <input
+                      id="applicantBusinessName"
+                      type="text"
+                      placeholder="Your business name"
+                      required
+                    />
+                  </label>
+                  <label>
+                    <span>Floor</span>
+                    <select id="applicationFloorSelect" required></select>
+                  </label>
+                  <label>
+                    <span>Room number</span>
+                    <select id="applicationRoomSelect" required></select>
+                  </label>
+                </div>
+
+                <div class="upload-grid">
+                  <label class="upload-field">
+                    <span>Applicant photo</span>
+                    <input
+                      id="applicantPhoto"
+                      type="file"
+                      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                      required
+                    />
+                    <span class="upload-hint"
+                      >Upload a clear photo of yourself</span
+                    >
+                    <img
+                      id="applicantPhotoPreview"
+                      class="upload-preview hidden"
+                      alt="Applicant photo preview"
+                    />
+                  </label>
+                  <label class="upload-field">
+                    <span>National ID front</span>
+                    <input
+                      id="applicantIdFront"
+                      type="file"
+                      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                      required
+                    />
+                    <span class="upload-hint">Upload the front of your ID</span>
+                    <img
+                      id="applicantIdFrontPreview"
+                      class="upload-preview hidden"
+                      alt="Front of ID preview"
+                    />
+                  </label>
+                  <label class="upload-field">
+                    <span>National ID back</span>
+                    <input
+                      id="applicantIdBack"
+                      type="file"
+                      accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                      required
+                    />
+                    <span class="upload-hint">Upload the back of your ID</span>
+                    <img
+                      id="applicantIdBackPreview"
+                      class="upload-preview hidden"
+                      alt="Back of ID preview"
+                    />
+                  </label>
+                </div>
+                <p
+                  id="uploadMessage"
+                  class="upload-message"
+                  role="status"
+                  aria-live="polite"
+                >
+                  JPG, PNG, or WebP images up to 5 MB each.
+                </p>
+                <button type="submit" class="primary-button">
+                  Apply for Room
+                </button>
+              </form>
+
+              <div class="action-row">
+                <button class="call-button">Call Landlord</button>
+                <button class="whatsapp-button">Chat with Landlord</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="landlordView" class="screen hidden">
+            <section id="landlordLoginView" class="auth-card">
+              <div class="mini-label">Landlord portal</div>
+              <h2>Sign in to your account</h2>
+              <p class="auth-description">
+                Enter your landlord details to access your property dashboard.
+              </p>
+
+              <form id="landlordLoginForm" class="auth-form">
+                <label>
+                  <span>Mall</span>
+                  <select id="landlordMallSelect" required>
+                    <option value="" selected disabled>Select a mall</option>
+                  </select>
+                </label>
+                <label>
+                  <span>Full name</span>
+                  <input
+                    id="landlordName"
+                    name="name"
+                    type="text"
+                    autocomplete="name"
+                    required
+                  />
+                </label>
+                <label>
+                  <span>Phone number</span>
+                  <input
+                    id="landlordPhone"
+                    name="phone"
+                    type="tel"
+                    autocomplete="tel"
+                    placeholder="+2567XXXXXXXX"
+                    required
+                  />
+                </label>
+                <label>
+                  <span>PIN</span>
+                  <input
+                    id="landlordPin"
+                    name="pin"
+                    type="password"
+                    inputmode="numeric"
+                    autocomplete="current-password"
+                    pattern="[0-9]{4}"
+                    maxlength="4"
+                    required
+                  />
+                </label>
+                <p
+                  id="landlordLoginMessage"
+                  class="auth-message"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+                <button type="submit" class="primary-button">Sign in</button>
+              </form>
+            </section>
+
+            <div id="landlordDashboard" class="hidden">
+              <div class="landlord-header">
+                <div>
+                  <div class="mini-label">Property management</div>
+                  <h2 id="landlordDashboardTitle">Landlord Admin Dashboard</h2>
+                </div>
+                <div class="landlord-header-actions">
+                  <button id="addNotificationBtn" class="primary-button small">
+                    Add Notification
+                  </button>
+                  <button
+                    id="landlordLogoutBtn"
+                    class="secondary-button small"
+                    type="button"
+                  >
+                    Sign out
+                  </button>
+                </div>
+              </div>
+              <section
+                class="availability-panel landlord-availability"
+                aria-labelledby="landlordAvailabilityTitle"
+              >
+                <div class="availability-heading">
+                  <div>
+                    <div class="mini-label">Property overview</div>
+                    <h3 id="landlordAvailabilityTitle">Room availability</h3>
+                  </div>
+                </div>
+                <div
+                  id="landlordMallAvailability"
+                  class="availability-grid"
+                ></div>
+              </section>
+
+              <div class="panel-box">
+                <div class="box-header">
+                  <h3>Pending Room Applications</h3>
+                </div>
+                <div id="pendingApplications" class="application-list"></div>
+                <div id="noApplications" class="empty-state hidden">
+                  No pending applications.
+                </div>
+              </div>
+
+              <div class="panel-box utility-box">
+                <div class="box-header">
+                  <h3>Electricity &amp; Water Billing</h3>
+                </div>
+
+                <div class="utility-grid">
+                  <label>
+                    <span>Select Floor</span>
+                    <select id="adminFloorSelect"></select>
+                  </label>
+                  <label>
+                    <span>Select Occupied Room</span>
+                    <select id="adminRoomSelect"></select>
+                  </label>
+                </div>
+                <p
+                  id="applicationMessage"
+                  class="application-message"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+
+                <div class="tenant-summary">
+                  <p id="selectedTenantName">Tenant: Amina Nakato</p>
+                  <p id="selectedTenantPhone">Phone: +256701234567</p>
+                  <p id="selectedBaseRent">Base Rent: UGX 500,000</p>
+                </div>
+
+                <p class="utility-rate-note">
+                  Enter the meter readings and utility rates for this room.
+                </p>
+
+                <div class="utility-meter-grid">
+                  <section
+                    class="utility-meter-group"
+                    aria-labelledby="electricityHeading"
+                  >
+                    <h4 id="electricityHeading">Electricity</h4>
+                    <div class="utility-grid">
+                      <label>
+                        <span>Previous meter reading</span>
+                        <input
+                          id="previousReading"
+                          type="number"
+                          min="0"
+                          step="any"
+                          value="1200"
+                        />
+                      </label>
+                      <label>
+                        <span>Current meter reading</span>
+                        <input
+                          id="currentReading"
+                          type="number"
+                          min="0"
+                          step="any"
+                          value="1375"
+                        />
+                      </label>
+                      <label>
+                        <span>Electricity rate (UGX/unit)</span>
+                        <input
+                          id="unitTariff"
+                          type="number"
+                          min="0"
+                          step="any"
+                          value="6000"
+                        />
+                      </label>
+                    </div>
+                  </section>
+                  <section
+                    class="utility-meter-group"
+                    aria-labelledby="waterHeading"
+                  >
+                    <h4 id="waterHeading">Water</h4>
+                    <div class="utility-grid">
+                      <label>
+                        <span>Previous meter reading</span>
+                        <input
+                          id="waterPreviousReading"
+                          type="number"
+                          min="0"
+                          step="any"
+                          value="400"
+                        />
+                      </label>
+                      <label>
+                        <span>Current meter reading</span>
+                        <input
+                          id="waterCurrentReading"
+                          type="number"
+                          min="0"
+                          step="any"
+                          value="425"
+                        />
+                      </label>
+                      <label>
+                        <span>Water rate (UGX/unit)</span>
+                        <input
+                          id="waterUnitTariff"
+                          type="number"
+                          min="0"
+                          step="any"
+                          value="2000"
+                        />
+                      </label>
+                    </div>
+                  </section>
+                </div>
+
+                <button id="calculateBillBtn" class="secondary-button">
+                  Calculate Utility Bill
+                </button>
+                <p
+                  id="billValidationMessage"
+                  class="bill-validation-message"
+                  role="status"
+                  aria-live="polite"
+                ></p>
+
+                <div class="utility-results bill-breakdown">
+                  <p>
+                    <span>Base rent</span
+                    ><strong id="baseRentDue">UGX 500,000</strong>
+                  </p>
+                  <p>
+                    <span
+                      >Electricity (<span id="unitsUsed">175</span> units)</span
+                    ><strong id="utilityCharge">UGX 1,050,000</strong>
+                  </p>
+                  <p>
+                    <span
+                      >Water (<span id="waterUnitsUsed">25</span> units)</span
+                    ><strong id="waterCharge">UGX 50,000</strong>
+                  </p>
+                  <p class="grand-total">
+                    <span>TOTAL DUE</span
+                    ><strong id="totalDue">UGX 1,600,000</strong>
+                  </p>
+                </div>
+
+                <div class="action-row landlord-actions">
+                  <button class="whatsapp-button">Send WhatsApp Invoice</button>
+                  <button class="call-button">Call Tenant</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer">
+        <span>SmartArcade &amp; Rent Manager</span>
+      </footer>
+    </div>
+
+    <aside
+      id="notificationPanel"
+      class="notification-panel hidden"
+      aria-live="polite"
+    >
+      <div class="notification-header">
+        <h3>Notifications</h3>
+        <button
+          id="closeNotifications"
+          class="close-btn"
+          aria-label="Close notifications"
+        >
+          ×
+        </button>
+      </div>
+      <div id="notificationList" class="notification-list"></div>
+      <div id="emptyNotifications" class="empty-state hidden">
+        No notifications yet.
+      </div>
+    </aside>
+
+    <script src="script.js"></script>
+  </body>
+</html>
